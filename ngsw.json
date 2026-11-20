@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1795161561735,
+  "timestamp": 1795161745633,
   "index": "/bitcoin-order-app/index.html",
   "assetGroups": [
     {
@@ -70,7 +70,7 @@
     "/bitcoin-order-app/assets/pixel.gif": "87bb3a5dcd68684dee2e401dc8ed016eb6bea75f",
     "/bitcoin-order-app/back6.fa641a3036560cae.jpg": "bb1d88aec46a62d77cf358868f406f68399e7b8f",
     "/bitcoin-order-app/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/bitcoin-order-app/index.html": "fee027f04ce3326a2390f126ebcc596f9460c056",
+    "/bitcoin-order-app/index.html": "70b962290fa31996f978931722cf612c6219545c",
     "/bitcoin-order-app/main.25931ff272cc5179.js": "d3359c3497bf3207cffba2aee5bac2d6ad1e9510",
     "/bitcoin-order-app/manifest.webmanifest": "da1eee6ec517d6398dc60e53058e5fec8304e10f",
     "/bitcoin-order-app/polyfills.2d3f8bf28b00b833.js": "bb7eeb5281ecb8db11eb7123092f225011dcd626",
