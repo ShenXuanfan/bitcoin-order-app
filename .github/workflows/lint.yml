@@ -1,0 +1,39 @@
+name: linting-tool-scan
+on:
+  push:
+    branches: [githubcicd]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.20.2
+          cache: npm
+      - name: Install Dependencies
+        run: npm ci --force
+      - name: Installing JSHint
+        run: npm install --global jshint@2.13.6
+      - name: Run scan with JSHint
+        run: bash scripts/jshint-script.sh
+      - name: Archive lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linting-tool-report
+          path: JSHint-report
+          if-no-files-found: error
+      - name: Report summary
+        if: always()
+        run: |
+          echo '## JSHint scan report' >> "$GITHUB_STEP_SUMMARY"
+          echo 'JavaScript only; Angular TypeScript is checked separately by the existing ESLint build step.' >> "$GITHUB_STEP_SUMMARY"
+          echo '```text' >> "$GITHUB_STEP_SUMMARY"
+          head -n 80 JSHint-report >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

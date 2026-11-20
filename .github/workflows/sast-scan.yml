@@ -1,0 +1,47 @@
+name: sast-scan
+on:
+  push:
+    branches: [githubcicd]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.20.2
+          cache: npm
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install dependencies
+        run: npm ci --force
+      - name: Download OWASP Dependency-Check
+        run: |
+          curl --fail --location --retry 3 https://github.com/dependency-check/DependencyCheck/releases/download/v13.0.0/dependency-check-13.0.0-release.zip -o "$RUNNER_TEMP/dependency-check.zip"
+          unzip -q "$RUNNER_TEMP/dependency-check.zip" -d "$RUNNER_TEMP/odc"
+      - name: Run OWASP Dependency-Check
+        run: |
+          mkdir -p sast-reports
+          "$RUNNER_TEMP/odc/dependency-check/bin/dependency-check.sh" \
+            --project "bitcoin - ShenXuanfan" \
+            --nvdDatafeed 'https://dependency-check.github.io/DependencyCheck_Builder/nvd_cache/nvdcve-{0}.json.gz' \
+            --out sast-reports --scan . \
+            --exclude '**/.git/**' \
+            --format HTML --format JSON \
+            --disableOssIndex 2>&1 | tee sast-reports/dependency-check.log
+      - name: Archive SAST report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-report
+          path: sast-reports/
+          if-no-files-found: error
